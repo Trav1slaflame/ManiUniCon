@@ -145,6 +145,7 @@ python main.py robot=ur5 policy=spacemouse policy.record_dir=./data/ur5_recordin
 # Merge multiple episodes into a single zarr file
 python tools/process_demo_data.py ./data/ur5_recording
 ```
+To support vla training, you can transfer the zarr dataset into rlds dataset easily, see [zarr2rlds](tools/zarr2rlds).
 
 ### Configuration Examples
 
