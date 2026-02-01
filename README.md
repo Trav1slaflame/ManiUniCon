@@ -296,6 +296,27 @@ class MyCustomPolicy(mp.Process):
 
 3. Add configuration in `configs/policy/my_policy.yaml`
 
+4. Deploy your policy/vla model:
+```
+# Quick Deploy
+python main.py robot=ur5 policy=openvla_oft
+
+# Example to deploy your policy with overlay viewer:
+python main.py robot=ur5 policy=wog policy.record_dir="your_record_dir" 
++overlay.enabled=true 
++overlay.first_frames_dir="your_target_frames_to_be_overlayed" 
++overlay.camera_name="camera_0" 
++overlay.ref_index=1 
++overlay.alpha=0.7
+
+## Example first frame directory structure:
+
+target_frames/
+├── 0.jpg
+├── 1.jpg
+└── ...
+
+```
 ## 🛠️ Available Tools
 
 The `tools/` directory contains utility scripts for:

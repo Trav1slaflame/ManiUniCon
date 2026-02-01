@@ -1,0 +1,31 @@
+_target_: maniunicon.policies.torch_model_vla.VLAPolicy
+
+frame_latency: ${eval:'1 / 30'}
+infer_latency: ${eval:'1 / 20'}
+steps_per_inference: 16 # expected openloop steps
+use_real_time_chunking: false
+enable_recording: true
+record_dir: null # path to recorded files
+device: ${device}
+synchronized: ${synchronized}
+
+model:
+  _target_: maniunicon.customize.policy_model.wog_model.WoGpolicy
+  saved_model_path: "your_ckpt_path" 
+  # device: ${device}
+  unnorm_key: "fold" 
+  task_name: "fold the blue towel"  
+
+obs_wrapper:
+  _target_: maniunicon.customize.obs_wrapper.spatialvla_rgb_wrapper.SpatialVLAImageWrapper
+  camera_config: ${data.camera_config}
+  state_keys: ["tcp_position", "tcp_orientation", "joint_positions", "joint_velocities", "gripper_state"]
+  num_cams: 1  # Set to 1 for single camera, 2+ for multi-camera setup
+  observation_horizon: 1  # Should match the window size in VLA model
+
+act_wrapper:
+  _target_: maniunicon.customize.act_wrapper.spatialvla_eepose_wrapper.SpatialVLAEEPoseWrapper
+  hist_action: 0  # Number of historical actions to consider
+  action_horizon: 8  
+  control_mode: cartesian
+  dt: ${policy.dt}

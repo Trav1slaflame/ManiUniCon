@@ -10,6 +10,7 @@ from pynput import keyboard
 from omegaconf import OmegaConf
 
 from maniunicon.utils.shared_memory.shared_storage import SharedStorage
+from maniunicon.utils.overlay_viewer import run_overlay_viewer
 
 
 class RobotControlSystem:
@@ -21,6 +22,7 @@ class RobotControlSystem:
         robot_cfg: Dict[str, Any],
         policy_cfg: Dict[str, Any],
         sensors_cfg: Dict[str, Any],
+        overlay_cfg: Dict[str, Any] | None = None,
         max_record_steps: int = 500,
     ):
         # Create shared memory
@@ -56,6 +58,10 @@ class RobotControlSystem:
             for name, sensor_cfg in sensors_cfg.items()
         }
 
+        # Overlay viewer config
+        self.overlay_cfg = overlay_cfg
+        self.overlay_proc = None
+
         # Set up signal handlers
         signal.signal(signal.SIGINT, self._signal_handler)
         signal.signal(signal.SIGTERM, self._signal_handler)
@@ -82,6 +88,26 @@ class RobotControlSystem:
             print(f"{sensor_name} started.")
         print("All sensors are started.")
 
+        # Spawn shared-memory overlay viewer if enabled
+        try:
+            if self.overlay_cfg is not None and getattr(self.overlay_cfg, "enabled", False):
+                ref_dir = getattr(self.overlay_cfg, "first_frames_dir", None)
+                cam_name = getattr(self.overlay_cfg, "camera_name", "camera_0")
+                ref_index = int(getattr(self.overlay_cfg, "ref_index", 0))
+                alpha = float(getattr(self.overlay_cfg, "alpha", 0.7))
+                if ref_dir:
+                    self.overlay_proc = mp.Process(
+                        target=run_overlay_viewer,
+                        args=(self.shared_storage, ref_dir, cam_name, ref_index, alpha),
+                        daemon=True,
+                    )
+                    self.overlay_proc.start()
+                    print("Overlay viewer started.")
+                else:
+                    print("Overlay enabled but first_frames_dir not set; skipping viewer.")
+        except Exception as e:
+            print(f"Failed to start overlay viewer: {e}")
+
         self.policy.start()
         print("Policy started.")
 
@@ -102,6 +128,15 @@ class RobotControlSystem:
             sensor.stop()
 
         self.shared_storage.is_running.value = False
+        # Stop overlay viewer if running
+        try:
+            if self.overlay_proc is not None and self.overlay_proc.is_alive():
+                self.overlay_proc.terminate()
+                self.overlay_proc.join(timeout=2)
+                print("Overlay viewer stopped.")
+        except Exception as e:
+            print(f"Failed to stop overlay viewer: {e}")
+
         self.shm_manager.shutdown()
 
         print("All processes stopped")
@@ -133,6 +168,7 @@ def main(cfg):
         robot_cfg=cfg.robot,
         policy_cfg=cfg.policy,
         sensors_cfg=cfg.sensors,
+        overlay_cfg=getattr(cfg, "overlay", None),
         max_record_steps=cfg.max_record_steps,
     )
 
