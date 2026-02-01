@@ -215,14 +215,12 @@ class SingleZedCamera(mp.Process):
                         # Convert from nanoseconds to seconds
                         capture_time = timestamp.get_nanoseconds() / 1e9
 
-                        local_idxs, global_idxs, put_idx = (
-                            get_accumulate_timestamp_idxs(
-                                timestamps=[receive_time],
-                                start_time=put_start_time,
-                                dt=1.0 / self.fps,
-                                next_global_idx=put_idx,
-                                allow_negative=True,
-                            )
+                        local_idxs, global_idxs, put_idx = get_accumulate_timestamp_idxs(
+                            timestamps=[receive_time],
+                            start_time=put_start_time,
+                            dt=1.0 / self.fps,
+                            next_global_idx=put_idx,
+                            allow_negative=True,
                         )
 
                         for step_idx in global_idxs:
@@ -441,9 +439,7 @@ class ZedSensor(BaseSensor):
             self.intrs = None
 
             rate = RateLimiter(
-                frequency=self.frequency,
-                warn=self.warn_on_late,
-                name="zed_sensor",
+                frequency=self.frequency, warn=self.warn_on_late, name="zed_sensor"
             )
             while self.shared_storage.is_running.value and not self.stop_event.is_set():
                 try:
@@ -452,8 +448,7 @@ class ZedSensor(BaseSensor):
                         data = self.shared_storage.read_single_camera(camera_name)
                         if data is None:
                             print(
-                                "[ZedSensor] No data received from camera:",
-                                camera_name,
+                                "[ZedSensor] No data received from camera:", camera_name
                             )
                             rate.sleep()
                             continue

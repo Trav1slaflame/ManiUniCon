@@ -153,14 +153,14 @@ class DummyRealSenseSensor(BaseSensor):
                         fps = self.camera_config[cam_name]["fps"]
 
                         # Get timestamp indices for this camera
-                        local_idxs, global_idxs, put_idxs[cam_name] = (
-                            get_accumulate_timestamp_idxs(
-                                timestamps=[current_time],
-                                start_time=put_start_time,
-                                dt=1.0 / fps,
-                                next_global_idx=put_idxs[cam_name],
-                                allow_negative=True,
-                            )
+                        local_idxs, global_idxs, put_idxs[
+                            cam_name
+                        ] = get_accumulate_timestamp_idxs(
+                            timestamps=[current_time],
+                            start_time=put_start_time,
+                            dt=1.0 / fps,
+                            next_global_idx=put_idxs[cam_name],
+                            allow_negative=True,
                         )
 
                         # Create SingleCameraData for each step

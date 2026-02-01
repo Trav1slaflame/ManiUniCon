@@ -623,7 +623,7 @@ def quat_rotate(q: torch.Tensor, v: torch.Tensor) -> torch.Tensor:
     """
     q_w = q[..., 0]
     q_vec = q[..., 1:]
-    a = v * (2.0 * q_w**2 - 1.0).unsqueeze(-1)
+    a = v * (2.0 * q_w ** 2 - 1.0).unsqueeze(-1)
     b = torch.cross(q_vec, v, dim=-1) * q_w.unsqueeze(-1) * 2.0
     # for two-dimensional tensors, bmm is faster than einsum
     if q_vec.dim() == 2:
@@ -652,7 +652,7 @@ def quat_rotate_inverse(q: torch.Tensor, v: torch.Tensor) -> torch.Tensor:
     """
     q_w = q[..., 0]
     q_vec = q[..., 1:]
-    a = v * (2.0 * q_w**2 - 1.0).unsqueeze(-1)
+    a = v * (2.0 * q_w ** 2 - 1.0).unsqueeze(-1)
     b = torch.cross(q_vec, v, dim=-1) * q_w.unsqueeze(-1) * 2.0
     # for two-dimensional tensors, bmm is faster than einsum
     if q_vec.dim() == 2:
@@ -1954,14 +1954,12 @@ def transform_poses_from_frame_A_to_frame_B(
     """
     # Transform source end effector poses to be relative to source object frame
     src_poses_rel_frame_B = pose_in_A_to_pose_in_B(
-        pose_in_A=src_poses,
-        pose_A_in_B=pose_inv(frame_B[None]),
+        pose_in_A=src_poses, pose_A_in_B=pose_inv(frame_B[None])
     )
 
     # Apply relative poses to current object frame to obtain new target eef poses
     transformed_poses = pose_in_A_to_pose_in_B(
-        pose_in_A=src_poses_rel_frame_B,
-        pose_A_in_B=frame_A[None],
+        pose_in_A=src_poses_rel_frame_B, pose_A_in_B=frame_A[None]
     )
     return transformed_poses
 

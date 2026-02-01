@@ -311,8 +311,7 @@ class QuestPolicy(BasePolicy):
                         )
                         self.shared_storage.set_record_dir(self._current_episode_dir)
                         self.shared_storage.start_record(
-                            start_time=time.time(),
-                            dt=self.dt,
+                            start_time=time.time(), dt=self.dt
                         )
                         print(
                             f"Recording started - Episode: {os.path.basename(self._current_episode_dir)}"
@@ -344,10 +343,8 @@ class QuestPolicy(BasePolicy):
                 ).as_quat()
 
                 # Apply workspace bounds clipping to internal state
-                self._current_tcp_position, self._current_tcp_orientation = (
-                    self._clip_tcp_pose_to_bounds(
-                        self._current_tcp_position, self._current_tcp_orientation
-                    )
+                self._current_tcp_position, self._current_tcp_orientation = self._clip_tcp_pose_to_bounds(
+                    self._current_tcp_position, self._current_tcp_orientation
                 )
 
                 # Convert gripper state to array format

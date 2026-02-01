@@ -2,8 +2,4 @@
 
 from maniunicon.core import robot, policy, sensor
 
-__all__ = [
-    "robot",
-    "policy",
-    "sensor",
-]
+__all__ = ["robot", "policy", "sensor"]

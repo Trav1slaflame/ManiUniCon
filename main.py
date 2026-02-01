@@ -38,9 +38,7 @@ class RobotControlSystem:
         self.reset_event = mp.Event()
 
         self.robot = hydra.utils.instantiate(
-            robot_cfg,
-            shared_storage=self.shared_storage,
-            reset_event=self.reset_event,
+            robot_cfg, shared_storage=self.shared_storage, reset_event=self.reset_event
         )
 
         self.policy = hydra.utils.instantiate(
@@ -52,8 +50,7 @@ class RobotControlSystem:
 
         self.sensors = {
             name: hydra.utils.instantiate(
-                sensor_cfg,
-                shared_storage=self.shared_storage,
+                sensor_cfg, shared_storage=self.shared_storage
             )
             for name, sensor_cfg in sensors_cfg.items()
         }
@@ -90,7 +87,9 @@ class RobotControlSystem:
 
         # Spawn shared-memory overlay viewer if enabled
         try:
-            if self.overlay_cfg is not None and getattr(self.overlay_cfg, "enabled", False):
+            if self.overlay_cfg is not None and getattr(
+                self.overlay_cfg, "enabled", False
+            ):
                 ref_dir = getattr(self.overlay_cfg, "first_frames_dir", None)
                 cam_name = getattr(self.overlay_cfg, "camera_name", "camera_0")
                 ref_index = int(getattr(self.overlay_cfg, "ref_index", 0))
@@ -104,7 +103,9 @@ class RobotControlSystem:
                     self.overlay_proc.start()
                     print("Overlay viewer started.")
                 else:
-                    print("Overlay enabled but first_frames_dir not set; skipping viewer.")
+                    print(
+                        "Overlay enabled but first_frames_dir not set; skipping viewer."
+                    )
         except Exception as e:
             print(f"Failed to start overlay viewer: {e}")
 
@@ -148,11 +149,7 @@ class RobotControlSystem:
         sys.exit(0)
 
 
-@hydra.main(
-    version_base=None,
-    config_path="configs",
-    config_name="default",
-)
+@hydra.main(version_base=None, config_path="configs", config_name="default")
 def main(cfg):
     """Main entry point for the robot control system."""
     # Register custom OmegaConf resolver for mathematical expressions

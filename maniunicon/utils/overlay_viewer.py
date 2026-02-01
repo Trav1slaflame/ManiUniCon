@@ -4,6 +4,7 @@ import numpy as np
 from pathlib import Path
 import time
 
+
 def _load_ref_image(ref_dir: Path, index: int):
     img_path = ref_dir / f"{index}.jpg"
     if not img_path.exists():
@@ -14,8 +15,14 @@ def _load_ref_image(ref_dir: Path, index: int):
         print(f"Failed to load reference image: {img_path}")
     return img
 
-def run_overlay_viewer(shared_storage, first_frames_dir: str, camera_name: str = "camera_0",
-                       ref_index: int = 0, alpha_init: float = 0.7):
+
+def run_overlay_viewer(
+    shared_storage,
+    first_frames_dir: str,
+    camera_name: str = "camera_0",
+    ref_index: int = 0,
+    alpha_init: float = 0.7,
+):
     ref_dir = Path(first_frames_dir)
     if not ref_dir.is_dir():
         print(f"First frames directory does not exist: {ref_dir}")
@@ -32,9 +39,17 @@ def run_overlay_viewer(shared_storage, first_frames_dir: str, camera_name: str =
 
     cv.createTrackbar("alpha", win_name, int(alpha_init * 100), 100, lambda x: None)
 
-    ref_indices = sorted([int(p.stem) for p in ref_dir.glob("*.jpg") if p.stem.isdigit()])
+    ref_indices = sorted(
+        [int(p.stem) for p in ref_dir.glob("*.jpg") if p.stem.isdigit()]
+    )
     max_ref_index = ref_indices[-1] if ref_indices else ref_index
-    cv.createTrackbar("ref_index", win_name, min(ref_index, max_ref_index), max_ref_index, lambda x: None)
+    cv.createTrackbar(
+        "ref_index",
+        win_name,
+        min(ref_index, max_ref_index),
+        max_ref_index,
+        lambda x: None,
+    )
 
     print("Overlay process started. Interaction instructions:")
     print("  q/ESC exit overlay process")
@@ -70,11 +85,13 @@ def run_overlay_viewer(shared_storage, first_frames_dir: str, camera_name: str =
 
             overlay = cv.addWeighted(bgr, alpha, ref_resized, beta, 0.0)
             text = f"ref_index={ref_index} alpha={alpha:.2f}"
-            cv.putText(overlay, text, (10, 30), cv.FONT_HERSHEY_SIMPLEX, 1.0, (0, 255, 0), 2)
+            cv.putText(
+                overlay, text, (10, 30), cv.FONT_HERSHEY_SIMPLEX, 1.0, (0, 255, 0), 2
+            )
 
             cv.imshow(win_name, overlay)
             key = cv.waitKey(1) & 0xFF
-            if key in (ord('q'), 27):  # q or ESC
+            if key in (ord("q"), 27):  # q or ESC
                 break
     finally:
         cv.destroyWindow(win_name)

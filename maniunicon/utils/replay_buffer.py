@@ -42,11 +42,7 @@ def rechunk_recompress_array(
     group.move(name, tmp_key)
     old_arr = group[tmp_key]
     n_copied, n_skipped, n_bytes_copied = zarr.copy(
-        source=old_arr,
-        dest=group,
-        name=name,
-        chunks=chunks,
-        compressor=compressor,
+        source=old_arr, dest=group, name=name, chunks=chunks, compressor=compressor
     )
     del group[tmp_key]
     arr = group[name]

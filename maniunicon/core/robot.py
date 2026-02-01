@@ -247,10 +247,7 @@ class Robot(mp.Process):
         rot = Rotation.from_quat(curr_state.tcp_orientation)
         rotvec = rot.as_rotvec()
         curr_pose = np.concatenate([curr_state.tcp_position, rotvec], axis=-1)
-        pose_interp = PoseTrajectoryInterpolator(
-            times=[curr_t],
-            poses=[curr_pose],
-        )
+        pose_interp = PoseTrajectoryInterpolator(times=[curr_t], poses=[curr_pose])
         return pose_interp, last_waypoint_time
 
     def run(self):

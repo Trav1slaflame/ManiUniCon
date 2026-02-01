@@ -5,10 +5,7 @@ from typing import Dict, Any, Optional
 from loop_rate_limiters import RateLimiter
 
 from maniunicon.core.sensor import BaseSensor
-from maniunicon.utils.shared_memory.shared_storage import (
-    RobotState,
-    MultiCameraData,
-)
+from maniunicon.utils.shared_memory.shared_storage import RobotState, MultiCameraData
 from maniunicon.utils.replay_buffer import ReplayBuffer
 
 

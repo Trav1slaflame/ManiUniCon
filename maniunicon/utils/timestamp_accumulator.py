@@ -119,9 +119,7 @@ class TimestampAlignedBuffer:
             return self.next_global_idx
 
     def add(
-        self,
-        data: Dict[str, Union[np.ndarray, float, int, str, Any]],
-        timestamp: float,
+        self, data: Dict[str, Union[np.ndarray, float, int, str, Any]], timestamp: float
     ):
         # Check if recording should be stopped
         if self.recording_stopped:

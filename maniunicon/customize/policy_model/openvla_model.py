@@ -242,9 +242,7 @@ class OpenVLAModel:
             images = [Image.fromarray(image).convert("RGB")]
 
         # Prepare observation dict for OpenVLA
-        obs_dict = {
-            "full_image": image,  # Primary camera as numpy array
-        }
+        obs_dict = {"full_image": image}  # Primary camera as numpy array
 
         # Add wrist cameras if configured for multi-image input
         if self.cfg.num_images_in_input > 1:

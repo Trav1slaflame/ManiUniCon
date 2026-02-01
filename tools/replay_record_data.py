@@ -146,8 +146,8 @@ def visualize_robot_state(
                 ):
                     try:
                         # Compute forward kinematics from joint positions
-                        fk_position, fk_orientation = (
-                            meshcat_interface.forward_kinematics(joint_positions)
+                        fk_position, fk_orientation = meshcat_interface.forward_kinematics(
+                            joint_positions
                         )
 
                         # Calculate position error (Euclidean distance)
@@ -571,16 +571,10 @@ def main():
         help="URDF package directories (default: assets/xarm6_urdf)",
     )
     parser.add_argument(
-        "--num_joints",
-        type=int,
-        default=6,
-        help="Number of robot joints (default: 6)",
+        "--num_joints", type=int, default=6, help="Number of robot joints (default: 6)"
     )
     parser.add_argument(
-        "--tcp_frame",
-        type=str,
-        default="link6",
-        help="TCP frame name (default: link6)",
+        "--tcp_frame", type=str, default="link6", help="TCP frame name (default: link6)"
     )
     parser.add_argument(
         "--check_consistency_freq",

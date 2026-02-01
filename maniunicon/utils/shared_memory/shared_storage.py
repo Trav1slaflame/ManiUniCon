@@ -25,10 +25,7 @@ class ControlMode(Enum):
     @classmethod
     def from_str(cls, mode_str: str) -> "ControlMode":
         """Convert string to ControlMode enum."""
-        mode_map = {
-            "joint": cls.JOINT_POSITION,
-            "cartesian": cls.CARTESIAN,
-        }
+        mode_map = {"joint": cls.JOINT_POSITION, "cartesian": cls.CARTESIAN}
         if mode_str not in mode_map:
             raise ValueError(
                 f"Invalid control mode: {mode_str}. Valid modes are: {list(mode_map.keys())}"
@@ -37,10 +34,7 @@ class ControlMode(Enum):
 
     def to_str(self) -> str:
         """Convert ControlMode enum to string."""
-        mode_map = {
-            self.JOINT_POSITION: "joint",
-            self.CARTESIAN: "cartesian",
-        }
+        mode_map = {self.JOINT_POSITION: "joint", self.CARTESIAN: "cartesian"}
         return mode_map[self]
 
     @classmethod
@@ -478,9 +472,7 @@ class SharedStorage:
         )
 
     def read_single_camera(
-        self,
-        cam_name: str,
-        k: int | None = None,
+        self, cam_name: str, k: int | None = None
     ) -> SingleCameraData:
         """Read the latest single camera data from the shared memory."""
 

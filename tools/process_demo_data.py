@@ -203,8 +203,7 @@ def main(args):
             )
             if "realsense" in raw_episode_data:
                 n_steps = min(
-                    n_steps,
-                    len(raw_episode_data["realsense"]["_buffer_timestamps"]),
+                    n_steps, len(raw_episode_data["realsense"]["_buffer_timestamps"])
                 )
             if "model_realsense" in raw_episode_data:
                 n_steps = min(
@@ -213,9 +212,7 @@ def main(args):
                 )
             raw_episode_data = dict_apply(raw_episode_data, lambda x: x[:n_steps])
 
-            episode_data = dict(
-                obs=dict(),
-            )
+            episode_data = dict(obs=dict())
             for k, v in raw_episode_data["state"].items():
                 # use state `timestamp` as episode timestamps
                 if k == "_buffer_timestamps":

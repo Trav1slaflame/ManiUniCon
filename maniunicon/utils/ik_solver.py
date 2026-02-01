@@ -115,7 +115,7 @@ class IKSolver:
         # Add posture task if enabled
         if self.robot_config.get("enable_posture_task", True):
             self.posture_task = PostureTask(
-                cost=self.robot_config.get("posture_cost", 1e-3),
+                cost=self.robot_config.get("posture_cost", 1e-3)
             )
             self.tasks.append(self.posture_task)
 
@@ -137,9 +137,7 @@ class IKSolver:
 
         # Velocity limits
         if self.robot_config.get("enable_velocity_limits", True):
-            self.velocity_limit = VelocityLimit(
-                self.model,
-            )
+            self.velocity_limit = VelocityLimit(self.model)
             self.limits.append(self.velocity_limit)
 
     def _select_qp_solver(self, preferred_solver: Optional[str] = None) -> str:
@@ -195,10 +193,7 @@ class IKSolver:
         # Update target pose
         if target_position is not None and target_orientation is not None:
             # Create SE3 target
-            target_se3 = pin.SE3(
-                pin.Quaternion(target_orientation),
-                target_position,
-            )
+            target_se3 = pin.SE3(pin.Quaternion(target_orientation), target_position)
             self.ee_task.set_target(target_se3)
 
         try:
