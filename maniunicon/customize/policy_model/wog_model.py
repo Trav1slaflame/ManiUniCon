@@ -9,7 +9,7 @@ from flask import Flask, request, jsonify
 import tempfile
 import torch
 from vla import load_vla
-from sim_wog.adaptive_ensemble import AdaptiveEnsembler
+from deploy.adaptive_ensemble import AdaptiveEnsembler
 from maniunicon.utils.vla_utils import euler_pose_to_quat
 
 app = Flask(__name__)
