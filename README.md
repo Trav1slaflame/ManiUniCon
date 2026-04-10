@@ -151,6 +151,19 @@ python tools/process_demo_data.py ./data/ur5_recording
 ```
 To support **vla training**, you can transfer the zarr dataset into **rlds dataset** easily, see [zarr2rlds](tools/zarr2rlds).
 
+3. **Export to LeRobot Dataset v3.0**:
+```bash
+pip install -e '.[lerobot]'
+python -m tools.zarr2lerobot.convert_zarr_to_lerobot \
+    --zarr-path ./data/ur5_recording/run.joint.zarr \
+    --output-dir ./data/ur5_recording_lerobot \
+    --repo-id myuser/ur5-pick \
+    --task "pick up the red cube" \
+    --fps 30 \
+    --robot-type ur5
+```
+Per-episode descriptions in the zarr's `meta/episode_descriptions` take precedence over `--task` when non-empty. Depth frames are not exported in v1.
+
 ### Configuration Examples
 
 #### Teleoperate XArm6 with SpaceMouse Control
