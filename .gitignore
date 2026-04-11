@@ -94,3 +94,4 @@ references/
 **/outputs
 reference_repos/
 tests/
+!tools/zarr2lerobot/tests/
