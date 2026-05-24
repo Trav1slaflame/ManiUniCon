@@ -36,9 +36,7 @@ class WorkspaceBoundsRecorder:
         self.reset_event = mp.Event()
 
         self.robot = hydra.utils.instantiate(
-            robot_cfg,
-            shared_storage=self.shared_storage,
-            reset_event=self.reset_event,
+            robot_cfg, shared_storage=self.shared_storage, reset_event=self.reset_event
         )
 
         self.policy = hydra.utils.instantiate(
@@ -311,11 +309,7 @@ class WorkspaceBoundsRecorder:
         sys.exit(0)
 
 
-@hydra.main(
-    version_base=None,
-    config_path="../configs",
-    config_name="default",
-)
+@hydra.main(version_base=None, config_path="../configs", config_name="default")
 def main(cfg):
     """Main entry point for the workspace bounds recorder."""
     # Register custom OmegaConf resolver for mathematical expressions
@@ -326,9 +320,7 @@ def main(cfg):
 
     # Create and start recorder
     recorder = WorkspaceBoundsRecorder(
-        data_cfg=cfg.data,
-        robot_cfg=cfg.robot,
-        policy_cfg=cfg.policy,
+        data_cfg=cfg.data, robot_cfg=cfg.robot, policy_cfg=cfg.policy
     )
 
     try:

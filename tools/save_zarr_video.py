@@ -286,10 +286,7 @@ def main():
         help="Maximum depth for colorization (default: 1.5)",
     )
     parser.add_argument(
-        "--video_codec",
-        type=str,
-        default="mp4v",
-        help="Video codec (default: mp4v)",
+        "--video_codec", type=str, default="mp4v", help="Video codec (default: mp4v)"
     )
 
     args = parser.parse_args()

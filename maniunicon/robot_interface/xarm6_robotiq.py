@@ -106,9 +106,7 @@ class XArm6RobotiqInterface(RobotInterface):
                 self.arm.set_state(0)
                 # Move to initial joint position
                 self.arm.set_servo_angle(
-                    angle=self.config["init_qpos"],
-                    wait=True,
-                    is_radian=True,
+                    angle=self.config["init_qpos"], wait=True, is_radian=True
                 )
                 # Open Robotiq gripper
                 if self.gripper is not None:
@@ -133,9 +131,7 @@ class XArm6RobotiqInterface(RobotInterface):
                 self.arm.set_state(0)
                 # Move to initial joint position
                 self.arm.set_servo_angle(
-                    angle=joint_positions,
-                    wait=True,
-                    is_radian=True,
+                    angle=joint_positions, wait=True, is_radian=True
                 )
 
                 self.arm.set_mode(1)
@@ -248,9 +244,7 @@ class XArm6RobotiqInterface(RobotInterface):
                     if success:
                         # Convert to degrees and send joint command
                         self.arm.set_servo_angle_j(
-                            angles=joint_solution.tolist(),
-                            speed=0.5,
-                            is_radian=True,
+                            angles=joint_solution.tolist(), speed=0.5, is_radian=True
                         )
                     else:
                         print("IK solution failed")

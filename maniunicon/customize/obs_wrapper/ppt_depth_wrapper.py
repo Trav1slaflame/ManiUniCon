@@ -88,10 +88,7 @@ class PPTDepthWrapper:
         }
         obs = preprocess_obs(obs)
 
-        obs_tensor = dict_apply(
-            obs,
-            lambda x: x.flatten(0, 1),
-        )
+        obs_tensor = dict_apply(obs, lambda x: x.flatten(0, 1))
         # general_capture(obs_tensor, visualize=True)
 
         return obs_tensor

@@ -49,8 +49,11 @@ setup(
             "opencv-python",
             "numba",
         ],  # Optional dependency for RealSense cameras
-        "franky_fr3_franky": [
-            "franky-control==1.1.1",
+        "franky_fr3_franky": ["franky-control==1.1.1"],
+        "lerobot": [
+            # 0.4.x is the last series that still supports Python 3.10
+            # (0.5.0+ requires 3.12) while shipping Dataset v3.0.
+            "lerobot>=0.4.0,<0.5",
         ],
     },
     python_requires=">=3.10",

@@ -175,11 +175,7 @@ class PKRobotArm:
         return th
 
     def get_state_trimesh(
-        self,
-        joint_pos,
-        X_w_b=torch.eye(4),
-        visual=True,
-        collision=False,
+        self, joint_pos, X_w_b=torch.eye(4), visual=True, collision=False
     ):
         """
         Get the trimesh representation of the robotic arm based on the provided joint positions and base transformation.
@@ -267,12 +263,7 @@ def segment_robot_arm(rgb_image):
 
 
 def optimize_camera_pose(
-    mask_list,
-    joint_values_list,
-    init_X_CameraBase,
-    K,
-    n_epochs=200,
-    lr=3e-3,
+    mask_list, joint_values_list, init_X_CameraBase, K, n_epochs=200, lr=3e-3
 ):
     """
     Optimize camera extrinsics using differentiable rendering with multiple samples
@@ -346,8 +337,7 @@ def optimize_camera_pose(
             [cam_rot, cam_position.unsqueeze(1)], dim=1
         )  # [3, 4]
         current_X_CameraBase = torch.cat(
-            [current_X_CameraBase, torch.tensor([[0, 0, 0, 1]]).cuda().float()],
-            dim=0,
+            [current_X_CameraBase, torch.tensor([[0, 0, 0, 1]]).cuda().float()], dim=0
         )  # [4, 4]
 
         # Render masks for all samples using current camera pose
@@ -397,13 +387,7 @@ def optimize_camera_pose(
     return optimized_X_BaseCamera, loss_history
 
 
-def visualize_results(
-    rgb_image,
-    mask,
-    joint_values,
-    optimized_X_BaseCamera,
-    K,
-):
+def visualize_results(rgb_image, mask, joint_values, optimized_X_BaseCamera, K):
     """
     Visualize the optimization results
 
@@ -464,12 +448,7 @@ def visualize_results(
 
 
 def run_single_frame_calibration(
-    init_X_BaseCamera,
-    K,
-    save_path=None,
-    n_epochs=200,
-    lr=3e-3,
-    visualize=True,
+    init_X_BaseCamera, K, save_path=None, n_epochs=200, lr=3e-3, visualize=True
 ):
     """
     Run the complete multi-frame camera calibration process
@@ -510,12 +489,7 @@ def run_single_frame_calibration(
 
         # Step 2: Optimize camera pose using multiple samples
         optimized_X_BaseCamera, loss_history = optimize_camera_pose(
-            mask_list,
-            joint_values_list,
-            init_X_CameraBase,
-            K,
-            n_epochs=n_epochs,
-            lr=lr,
+            mask_list, joint_values_list, init_X_CameraBase, K, n_epochs=n_epochs, lr=lr
         )
 
         rot_quat = R.from_matrix(optimized_X_BaseCamera[:3, :3]).as_quat(
@@ -553,13 +527,7 @@ def main():
     rot_mat = R.from_quat([0.2, -0.979, 0.0, 0.03], scalar_first=True).as_matrix()
     pos = np.array([-0.1992 + 6.25179097e-01, -0.44, 1.02])
 
-    K = np.array(
-        [
-            [606.65, 0.0, 329.51],
-            [0.0, 606.71, 243.67],
-            [0.0, 0.0, 1.0],
-        ]
-    )
+    K = np.array([[606.65, 0.0, 329.51], [0.0, 606.71, 243.67], [0.0, 0.0, 1.0]])
 
     # Example initial camera pose (you should replace this with your initial guess)
     init_X_BaseCamera = np.eye(4)

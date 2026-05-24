@@ -130,9 +130,7 @@ class GelloPolicy(BasePolicy):
 
             # Initialize Gello with current robot joint positions
             # Number of joints supported by Gello is determined by num_joints configuration
-            self.agent = GelloAgent(
-                port=self.device_path,
-            )
+            self.agent = GelloAgent(port=self.device_path)
 
             self._listener = pynput.keyboard.Listener(on_press=self._on_press)
             self._listener.start()
@@ -146,9 +144,7 @@ class GelloPolicy(BasePolicy):
             print("- Joint positions are clipped for safety")
 
             rate = RateLimiter(
-                frequency=self.frequency,
-                warn=self.warn_on_late,
-                name="gello_policy",
+                frequency=self.frequency, warn=self.warn_on_late, name="gello_policy"
             )
 
             smoother = JointSpaceSmoother(
@@ -201,9 +197,9 @@ class GelloPolicy(BasePolicy):
 
                     # If robot has more joints than Gello controls, keep current positions for extra joints
                     if num_robot_joints > self.num_joints:
-                        target_joint_positions[self.num_joints :] = (
-                            self._current_joint_positions[self.num_joints :]
-                        )
+                        target_joint_positions[
+                            self.num_joints :
+                        ] = self._current_joint_positions[self.num_joints :]
 
                     gripper_values = (
                         gello_output[self.num_joints : self.num_joints + 1] > 0.5
@@ -258,8 +254,7 @@ class GelloPolicy(BasePolicy):
                                 self._current_episode_dir
                             )
                             self.shared_storage.start_record(
-                                start_time=time.time(),
-                                dt=self.dt,
+                                start_time=time.time(), dt=self.dt
                             )
                             print(
                                 f"Recording started - Episode: {os.path.basename(self._current_episode_dir)}"

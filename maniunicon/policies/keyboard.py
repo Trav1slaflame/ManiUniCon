@@ -358,9 +358,7 @@ class KeyboardPolicy(BasePolicy):
             self.sync_state()
 
             rate = RateLimiter(
-                frequency=self.frequency,
-                warn=self.warn_on_late,
-                name="keyboard_policy",
+                frequency=self.frequency, warn=self.warn_on_late, name="keyboard_policy"
             )
             while self.shared_storage.is_running.value and not self._should_disconnect:
                 # Handle reset
@@ -437,10 +435,8 @@ class KeyboardPolicy(BasePolicy):
                         )
 
                 # Apply workspace bounds clipping to internal state
-                self._current_tcp_position, self._current_tcp_orientation = (
-                    self._clip_tcp_pose_to_bounds(
-                        self._current_tcp_position, self._current_tcp_orientation
-                    )
+                self._current_tcp_position, self._current_tcp_orientation = self._clip_tcp_pose_to_bounds(
+                    self._current_tcp_position, self._current_tcp_orientation
                 )
 
                 # Process joint keys

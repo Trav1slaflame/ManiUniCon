@@ -51,7 +51,9 @@ ManiUniCon uses a multi-process architecture with shared memory for efficient re
 
 ![Framework Architecture](medias/framework.png)
 
-## 📦 Installation
+<details>
+<summary><b>📦 Installation</b></summary>
+
 
 ### Prerequisites
 - Python 3.10+
@@ -106,6 +108,8 @@ pip install -e '.[realsense]'
 
 For **Gello** device, you need to setup the [Gello](https://github.com/wuphilipp/gello_software) following the instructions in the repository.
 
+</details>
+
 ## 🎮 Usage
 
 ### Basic Usage
@@ -145,6 +149,20 @@ python main.py robot=ur5 policy=spacemouse policy.record_dir=./data/ur5_recordin
 # Merge multiple episodes into a single zarr file
 python tools/process_demo_data.py ./data/ur5_recording
 ```
+To support **vla training**, you can transfer the zarr dataset into **rlds dataset** easily, see [zarr2rlds](tools/zarr2rlds).
+
+3. **Export to LeRobot Dataset v3.0**:
+```bash
+pip install -e '.[lerobot]'
+python -m tools.zarr2lerobot.convert_zarr_to_lerobot \
+    --zarr-path ./data/ur5_recording/run.joint.zarr \
+    --output-dir ./data/ur5_recording_lerobot \
+    --repo-id myuser/ur5-pick \
+    --task "pick up the red cube" \
+    --fps 30 \
+    --robot-type ur5
+```
+Per-episode descriptions in the zarr's `meta/episode_descriptions` take precedence over `--task` when non-empty. Depth frames are not exported in v1.
 
 ### Configuration Examples
 
@@ -158,7 +176,9 @@ python main.py robot=xarm6 sensors=realsense_xarm policy=spacemouse
 python main.py robot=ur5 sensors=realsense_ur policy=ppt_rgb_simple
 ```
 
-## 🔧 Development
+<details>
+<summary><b>🔧 Development</b></summary>
+
 
 ### Project Structure
 
@@ -296,7 +316,32 @@ class MyCustomPolicy(mp.Process):
 
 3. Add configuration in `configs/policy/my_policy.yaml`
 
-## 🛠️ Available Tools
+4. Deploy your policy/vla model:
+```
+# Quick Deploy
+python main.py robot=ur5 policy=openvla_oft
+
+# Example to deploy your policy with overlay viewer:
+python main.py robot=ur5 policy=wog policy.record_dir="your_record_dir" 
++overlay.enabled=true 
++overlay.first_frames_dir="your_target_frames_to_be_overlayed" 
++overlay.camera_name="camera_0" 
++overlay.ref_index=1 
++overlay.alpha=0.7
+
+## Example first frame directory structure:
+
+target_frames/
+├── 0.jpg
+├── 1.jpg
+└── ...
+
+```
+</details>
+
+<details>
+<summary><b>🛠️ Available Tools</b></summary>
+
 
 The `tools/` directory contains utility scripts for:
 - **Camera calibration**: `calibration/` - Tools for camera-robot calibration
@@ -305,7 +350,11 @@ The `tools/` directory contains utility scripts for:
 - **Visualization**: `save_zarr_video.py` - Save recorded data as video
 - **Hardware setup**: `list_realsense_cameras.py` - List available RealSense cameras
 
-## 🤝 Contributing
+</details>
+
+<details>
+<summary><b>🤝 Contributing</b></summary>
+
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
@@ -313,11 +362,17 @@ The `tools/` directory contains utility scripts for:
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## 📚 Resources
+</details>
+
+<details>
+<summary><b>📚 Resources</b></summary>
+
 
 For additional information and support:
 - [GitHub Issues](https://github.com/Universal-Control/ManiUniCon/issues) - Report bugs or request features
 - [Discussions](https://github.com/Universal-Control/ManiUniCon/discussions) - Ask questions and share ideas
+
+</details>
 
 ## 🔒 Safety
 
@@ -334,12 +389,13 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📖 Citation
 
+
 If you use ManiUniCon in your research, please cite:
 
 ```bibtex
 @software{maniunicon2025,
   title={ManiUniCon: A Unified Control Interface for Robotic Manipulation},
-  author={Zhu, Zhengbang and Liu, Minghuan and Han, Xiaoshen},
+  author={Zhu, Zhengbang and Liu, Minghuan and Han, Xiaoshen and Zhang, Zhengshen and Su, Yue},
   year={2025},
   url={https://github.com/Universal-Control/ManiUniCon}
 }
@@ -348,6 +404,7 @@ If you use ManiUniCon in your research, please cite:
 ## 🙏 Acknowledgments
 
 - [Diffusion Policy](https://github.com/real-stanford/diffusion_policy)
+
 
 ---
 

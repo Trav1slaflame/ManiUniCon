@@ -196,10 +196,7 @@ class PPTDepthWrapper:
         }
         obs = preprocess_obs(obs)
 
-        obs_tensor = dict_apply(
-            obs,
-            lambda x: x.flatten(0, 1),
-        )
+        obs_tensor = dict_apply(obs, lambda x: x.flatten(0, 1))
         # general_capture(obs_tensor, visualize=True)
 
         return obs_tensor
@@ -267,9 +264,7 @@ class DepthModelWrapper(torch.nn.Module):
         lowres_depth[lowres_depth > 0] = 1 / lowres_depth[lowres_depth > 0]
 
         depth = self.depth_model.infer_image(
-            x.squeeze(),
-            lowres_depth.squeeze(),
-            input_size=518,
+            x.squeeze(), lowres_depth.squeeze(), input_size=518
         )[None, ...]
 
         # depth[depth > 0] = 1. / depth[depth > 0]  # Convert to inverse depth

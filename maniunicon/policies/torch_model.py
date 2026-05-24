@@ -9,10 +9,7 @@ import traceback
 from pynput import keyboard
 
 from maniunicon.utils.data import get_next_episode_dir
-from maniunicon.utils.shared_memory.shared_storage import (
-    SharedStorage,
-    MultiCameraData,
-)
+from maniunicon.utils.shared_memory.shared_storage import SharedStorage, MultiCameraData
 from maniunicon.core.policy import BasePolicy
 
 
@@ -60,9 +57,7 @@ class TorchModelPolicy(BasePolicy):
         **kwargs: Any,
     ):
         super().__init__(
-            shared_storage=shared_storage,
-            reset_event=reset_event,
-            name=name,
+            shared_storage=shared_storage, reset_event=reset_event, name=name
         )
         self.model = model
         self.obs_wrapper = obs_wrapper
@@ -136,13 +131,9 @@ class TorchModelPolicy(BasePolicy):
                 self.model, device=self.device, _recursive_=False
             )
             self.obs_wrapper = hydra.utils.instantiate(
-                self.obs_wrapper,
-                shared_storage=self.shared_storage,
-                device=self.device,
+                self.obs_wrapper, shared_storage=self.shared_storage, device=self.device
             )
-            self.act_wrapper = hydra.utils.instantiate(
-                self.act_wrapper,
-            )
+            self.act_wrapper = hydra.utils.instantiate(self.act_wrapper)
 
             if self.enable_recording:
                 self._listener = keyboard.Listener(
@@ -213,8 +204,7 @@ class TorchModelPolicy(BasePolicy):
                                 self._current_episode_dir
                             )
                             self.shared_storage.start_record(
-                                start_time=time.time(),
-                                dt=self.dt,
+                                start_time=time.time(), dt=self.dt
                             )
                             print(
                                 f"Recording started - Episode: {os.path.basename(self._current_episode_dir)}"

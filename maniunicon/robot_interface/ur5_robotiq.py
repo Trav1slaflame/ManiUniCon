@@ -101,11 +101,7 @@ class UR5RobotiqInterface(RobotInterface):
         if self.robot_c is not None:
             print("init!")
             self.robot_c.servoStop()
-            self.robot_c.moveJ(
-                self.config["init_qpos"],
-                self.config["init_qvel"],
-                1.4,
-            )
+            self.robot_c.moveJ(self.config["init_qpos"], self.config["init_qvel"], 1.4)
             self.robot_c.stopJ()
             self.gripper.open()
             self.gripper_state = np.array([0.0])  # Gripper open state
@@ -117,11 +113,7 @@ class UR5RobotiqInterface(RobotInterface):
         if self.robot_c is not None:
             print(f"moving to joint positions {joint_positions}")
             self.robot_c.servoStop()
-            self.robot_c.moveJ(
-                joint_positions,
-                self.config["init_qvel"],
-                1.4,
-            )
+            self.robot_c.moveJ(joint_positions, self.config["init_qvel"], 1.4)
             self.robot_c.stopJ()
             print(f"moved to joint positions {joint_positions}")
             return True

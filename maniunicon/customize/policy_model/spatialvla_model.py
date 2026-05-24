@@ -63,9 +63,7 @@ class SpatialVLAModel:
             saved_model_path, trust_remote_code=True
         )
         self.vla = AutoModel.from_pretrained(
-            saved_model_path,
-            torch_dtype=torch.bfloat16,
-            trust_remote_code=True,
+            saved_model_path, torch_dtype=torch.bfloat16, trust_remote_code=True
         ).eval()
         self.vla.to(self.device)
 
@@ -164,8 +162,7 @@ class SpatialVLAModel:
                 generation_outputs = self.vla.predict_action(inputs)
 
                 raw_actions = self.processor.decode_actions(
-                    generation_outputs=generation_outputs,
-                    unnorm_key=self.unnorm_key,
+                    generation_outputs=generation_outputs, unnorm_key=self.unnorm_key
                 )["actions"]
             else:
                 raw_actions = self.vla.predict_action(**inputs)["actions"]

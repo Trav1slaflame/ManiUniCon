@@ -47,11 +47,7 @@ class VRPolicy:
 
         # 60 degree
         self.R_ve = _tmp_transform_mat @ np.array(
-            [
-                [0, -1 / 2, np.sqrt(3) / 2],
-                [-1, 0, 0],
-                [0, -np.sqrt(3) / 2, -1 / 2],
-            ]
+            [[0, -1 / 2, np.sqrt(3) / 2], [-1, 0, 0], [0, -np.sqrt(3) / 2, -1 / 2]]
         )
         # ee frame orientation may be different from robot world frame
         self.R_ve = ee_trans_mat @ self.R_ve
@@ -94,11 +90,7 @@ class VRPolicy:
 
     def reset_state(self):
         """Reset the internal state of the VR controller"""
-        self._state = {
-            "movement_enabled": False,
-            "poses": {},
-            "buttons": {},
-        }
+        self._state = {"movement_enabled": False, "poses": {}, "buttons": {}}
 
         # Reset tracking variables
         self.previous_vr_rotation = None

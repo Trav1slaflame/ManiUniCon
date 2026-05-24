@@ -95,10 +95,7 @@ def run_multi_frame_calibration(cfg, joint_values_file_path):
 
         # Start camera sensors
         sensors = {
-            name: hydra.utils.instantiate(
-                sensor_cfg,
-                shared_storage=shared_storage,
-            )
+            name: hydra.utils.instantiate(sensor_cfg, shared_storage=shared_storage)
             for name, sensor_cfg in cfg.sensors.items()
         }
 
@@ -184,11 +181,7 @@ def run_multi_frame_calibration(cfg, joint_values_file_path):
         print("All systems stopped.")
 
 
-@hydra.main(
-    version_base=None,
-    config_path="../configs",
-    config_name="default",
-)
+@hydra.main(version_base=None, config_path="../configs", config_name="default")
 def main(cfg):
     """
     Example usage of the multi-frame camera calibration functions

@@ -220,10 +220,8 @@ class FRANKAInterface(RobotInterface):
             if action.control_mode == "joint":
                 # Direct joint control
                 if action.joint_positions is not None:
-                    action.joint_positions, delta_joint_positions = (
-                        self._clip_joint_positions(
-                            action.joint_positions, min_threshold=0.0, return_delta=True
-                        )
+                    action.joint_positions, delta_joint_positions = self._clip_joint_positions(
+                        action.joint_positions, min_threshold=0.0, return_delta=True
                     )
                     if self.config.get("use_ruckig", False):
                         action.joint_positions, _, last_command_time = update_ruckig(

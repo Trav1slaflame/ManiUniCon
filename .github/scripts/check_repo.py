@@ -54,7 +54,9 @@ def is_hardcoded_path(s: str) -> bool:
         return False
 
     # Allow any path under /dev/*, including "/dev" itself
-    if s_stripped == "/dev" or any(s_stripped.startswith(p) for p in ALLOWED_ABS_PREFIXES):
+    if s_stripped == "/dev" or any(
+        s_stripped.startswith(p) for p in ALLOWED_ABS_PREFIXES
+    ):
         return False
 
     for pat in HARD_PATH_PATTERNS:
@@ -75,7 +77,9 @@ def check_file_for_issues(path: Path) -> list[str]:
     try:
         for tok in tokenize.tokenize(BytesIO(data).readline):
             if tok.type == tokenize.COMMENT and CHINESE_RE.search(tok.string):
-                errors.append(f"{path}:{tok.start[0]}: Chinese characters found in comment.")
+                errors.append(
+                    f"{path}:{tok.start[0]}: Chinese characters found in comment."
+                )
     except tokenize.TokenError:
         pass
 
@@ -113,7 +117,9 @@ def check_file_for_issues(path: Path) -> list[str]:
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Repo checks: Chinese comments & hardcoded paths")
+    parser = argparse.ArgumentParser(
+        description="Repo checks: Chinese comments & hardcoded paths"
+    )
     parser.add_argument("--base-ref", type=str, default="origin/main")
     args = parser.parse_args()
 

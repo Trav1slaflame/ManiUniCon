@@ -211,7 +211,7 @@ class RoboVlmsModel:
 
         act_cache = torch.stack(act_cache, dim=0)
 
-        weights = torch.tensor([fwd_decay_ratio**i for i in range(len(act_cache))])
+        weights = torch.tensor([fwd_decay_ratio ** i for i in range(len(act_cache))])
         weights = weights / weights.sum()
 
         weighted_act = (act_cache * weights.unsqueeze(1)).sum(dim=0)

@@ -77,9 +77,7 @@ class PPTImageWrapper:
             camera.colors.reshape(-1, *camera.colors.shape[2:]), (224, 224)
         )
         colors = colors.reshape(
-            camera.colors.shape[0],
-            camera.colors.shape[1],
-            *colors.shape[1:],
+            camera.colors.shape[0], camera.colors.shape[1], *colors.shape[1:]
         )
 
         images_tensor = {}
@@ -88,8 +86,5 @@ class PPTImageWrapper:
                 colors[:, cam_idx]
             ).to(self.device)
 
-        obs_tensor = {
-            "state": state_tensor,
-            "image": images_tensor,
-        }
+        obs_tensor = {"state": state_tensor, "image": images_tensor}
         return obs_tensor

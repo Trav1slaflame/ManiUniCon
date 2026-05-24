@@ -30,7 +30,7 @@ BOUND = [0.2, 1.03, -1.2, 1.2, -0.3, 0.7]
 
 @njit
 def filter_vectors(v, rgb):
-    norms = np.sqrt((v**2).sum(axis=1))
+    norms = np.sqrt((v ** 2).sum(axis=1))
     valid = norms > 0
     points = v[valid]
     colors = rgb[valid]
@@ -371,8 +371,9 @@ def open3d_pcd_outlier_removal(
     if vis:
         display_inlier_outlier(model_pcd, ind)
     # return pointcloud[ind] # No remove, not sure why
-    return np.array(model_pcd.select_by_index(ind).points), np.array(
-        model_pcd.select_by_index(ind).colors
+    return (
+        np.array(model_pcd.select_by_index(ind).points),
+        np.array(model_pcd.select_by_index(ind).colors),
     )
 
 
@@ -547,7 +548,7 @@ def get_arrow(end, origin=np.array([0, 0, 0]), scale=1, color=(1.0, 0.0, 0.0)):
     import open3d as o3d
 
     vec = end - origin
-    size = np.sqrt(np.sum(vec**2))
+    size = np.sqrt(np.sum(vec ** 2))
 
     Rz, Ry = calculate_zy_rotation_for_arrow(vec)
     mesh = o3d.geometry.TriangleMesh.create_arrow(
@@ -587,21 +588,14 @@ def vis_pcd_html(pcds, rgbs, name, gt_traj=None):
             y=pcds[:, 1],
             z=pcds[:, 2],
             mode="markers",
-            marker=dict(
-                size=8,
-                color=rgb_strings,
-            ),
+            marker=dict(size=8, color=rgb_strings),
         )
     ]
 
     if gt_traj is not None:
         gt_plot = [
             go.Scatter3d(
-                x=gx,
-                y=gy,
-                z=gz,
-                mode="markers",
-                marker=dict(size=10, color="red"),
+                x=gx, y=gy, z=gz, mode="markers", marker=dict(size=10, color="red")
             )
         ]
         pcd_plots += gt_plot
@@ -1030,16 +1024,8 @@ def pcd_filter_bound_torch(pc, bound):
         return within_bound[0]
 
 
-def pcd_downsample_torch(
-    obs,
-    bound_clip=False,
-    num=1200,
-    method="uniform",
-    bound=None,
-):
-    assert method in [
-        "uniform",
-    ], "expected method to be 'uniform', got {method}"
+def pcd_downsample_torch(obs, bound_clip=False, num=1200, method="uniform", bound=None):
+    assert method in ["uniform"], "expected method to be 'uniform', got {method}"
 
     if bound_clip:
         mask = pcd_filter_bound_torch(obs["pos"], bound=bound)
