@@ -282,9 +282,7 @@ class FalconModel:
         obs["image"]["camera_0"] = (
             obs["image"]["camera_0"].squeeze().cpu().detach()
         )  # (224, 224, 3)
-        obs["image"]["camera_1"] = (
-            obs["image"]["camera_1"].squeeze().cpu().detach()
-        )
+        obs["image"]["camera_1"] = obs["image"]["camera_1"].squeeze().cpu().detach()
         # get inputs for esm
         image_vggt = deepcopy(obs["image"]["camera_1"]).numpy()
         # preprocess image
