@@ -29,6 +29,7 @@ fwd_decay_ratio = 1
 # ---------------------------------------------
 MAX_DISTANCE = 0.6
 
+
 class FalconModel:
     # model option
     def __init__(
@@ -215,7 +216,7 @@ class FalconModel:
 
         act_cache = torch.stack(act_cache, dim=0)
 
-        weights = torch.tensor([fwd_decay_ratio ** i for i in range(len(act_cache))])
+        weights = torch.tensor([fwd_decay_ratio**i for i in range(len(act_cache))])
         weights = weights / weights.sum()
 
         weighted_act = (act_cache * weights.unsqueeze(1)).sum(dim=0)
@@ -278,14 +279,18 @@ class FalconModel:
         return queue_list, pad_mask
 
     def preprocess_esm(self, obs, lang, mode="continuous"):
-        obs["image"]["camera_0"] = obs["image"]["camera_0"].squeeze().cpu().detach() # (224, 224, 3)
-        obs["image"]["camera_1"] = obs["image"]["camera_1"].squeeze().cpu().detach()
+        obs["image"]["camera_0"] = (
+            obs["image"]["camera_0"].squeeze().cpu().detach()
+        )  # (224, 224, 3)
+        obs["image"]["camera_1"] = (
+            obs["image"]["camera_1"].squeeze().cpu().detach()
+        )
         # get inputs for esm
         image_vggt = deepcopy(obs["image"]["camera_1"]).numpy()
         # preprocess image
         image = obs["image"]["camera_1"].numpy()
         image = Image.fromarray(image)
-        image_x = self.image_preprocess([image]).unsqueeze(0) # (1, 1, 3, 224, 224)
+        image_x = self.image_preprocess([image]).unsqueeze(0)  # (1, 1, 3, 224, 224)
 
         gripper_x = None
         if "camera_0" in obs["image"]:
@@ -295,12 +300,19 @@ class FalconModel:
             gripper_x = gripper_x.to(self.device).to(self.dtype)
 
         # prepare inputs for esm
-        from falcon.model.policy_head.esm_utils.vggt.utils.load_fn import load_and_preprocess_images_square_new
+        from falcon.model.policy_head.esm_utils.vggt.utils.load_fn import (
+            load_and_preprocess_images_square_new,
+        )
+
         # TODO: hardcode for param setup
         vggt_target_size = 224
         image_vggt = Image.fromarray(image_vggt)
-        image_vggt_x, _ = load_and_preprocess_images_square_new([image_vggt], target_size=vggt_target_size)
-        image_vggt_x = image_vggt_x.unsqueeze(0).to(self.device).to(self.dtype) # (1, 1, 3, 224, 224)
+        image_vggt_x, _ = load_and_preprocess_images_square_new(
+            [image_vggt], target_size=vggt_target_size
+        )
+        image_vggt_x = (
+            image_vggt_x.unsqueeze(0).to(self.device).to(self.dtype)
+        )  # (1, 1, 3, 224, 224)
 
         text_x, mask = self.text_preprocess([lang])
 
@@ -329,10 +341,13 @@ class FalconModel:
 
         # preprocess pcd
         from falcon.eval.calvin.eval_utils import eval_filtered_sample_pcd
+
         n_points = self.act_head_configs.get("pcd_n_points", 2048)
         static_pcd_x = None
-        static_pcd = obs["pointcloud"].cpu().detach().numpy() # (N, 3)
-        static_pcd_x = eval_filtered_sample_pcd(static_pcd, n_points, MAX_DISTANCE).unsqueeze(0)
+        static_pcd = obs["pointcloud"].cpu().detach().numpy()  # (N, 3)
+        static_pcd_x = eval_filtered_sample_pcd(
+            static_pcd, n_points, MAX_DISTANCE
+        ).unsqueeze(0)
         static_pcd_x = static_pcd_x.unsqueeze(0).to(self.device).to(self.dtype)
 
         text_x, mask = self.text_preprocess([lang])
@@ -377,7 +392,9 @@ class FalconModel:
         input_dict = dict()
 
         if self.act_head_configs["type"] in {"FCDecoder_ESM", "LSTMDecoder_ESM"}:
-            image_x, gripper_x, text_x, mask, image_esm_x  = self.preprocess_esm(obs, self.task_name, self.action_space)
+            image_x, gripper_x, text_x, mask, image_esm_x = self.preprocess_esm(
+                obs, self.task_name, self.action_space
+            )
 
             input_dict["rgb"] = image_x
             input_dict["hand_rgb"] = gripper_x
@@ -385,7 +402,9 @@ class FalconModel:
             input_dict["text_mask"] = mask
             input_dict["rgb_vggt"] = image_esm_x
         else:
-            image_x, gripper_x, text_x, mask, static_pcd_x = self.preprocess_pcd(obs, self.task_name, self.action_space)
+            image_x, gripper_x, text_x, mask, static_pcd_x = self.preprocess_pcd(
+                obs, self.task_name, self.action_space
+            )
 
             input_dict["rgb"] = image_x
             input_dict["hand_rgb"] = gripper_x

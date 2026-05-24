@@ -50,9 +50,7 @@ def resize_image_sequence(images, target_size, interp=cv2.INTER_AREA):
 
     # Resize each image
     for i in range(N):
-        res = cv2.resize(
-            images[i], (new_W, new_H), interpolation=interp
-        )
+        res = cv2.resize(images[i], (new_W, new_H), interpolation=interp)
         if C == 1:
             output[i] = res[:, :, np.newaxis]
         else:
@@ -117,7 +115,7 @@ class FalconPCDWrapper:
         obs_tensor = {
             "state": state_tensor,
             "image": images_tensor,
-            "pointcloud": pcd_tensor
+            "pointcloud": pcd_tensor,
         }
 
         return obs_tensor
@@ -129,7 +127,7 @@ class FalconPCDWrapper:
         :return: Processed point clouds.
         """
         CAMERA_IDX = 1
-        
+
         transforms = camera.transforms.reshape(-1, 4, 4)[CAMERA_IDX]
         position = transforms[:3, 3]  # (3)
         # Extract rotation matrix and convert to quaternion (w, x, y, z)
@@ -137,13 +135,9 @@ class FalconPCDWrapper:
         quat_xyzw = Rotation.from_matrix(rotation_matrix).as_quat()
         # Convert to (w, x, y, z) format for create_pointcloud_from_depth_batch
         orientation = np.array([quat_xyzw[3], quat_xyzw[0], quat_xyzw[1], quat_xyzw[2]])
-        position = convert_to_torch(
-            position, dtype=torch.float32, device=device
-        )
-        orientation = convert_to_torch(
-            orientation, dtype=torch.float32, device=device
-        )
-        
+        position = convert_to_torch(position, dtype=torch.float32, device=device)
+        orientation = convert_to_torch(orientation, dtype=torch.float32, device=device)
+
         intrinsics = convert_to_torch(
             camera.intrs.reshape(-1, 4), dtype=torch.float32, device=device
         )  # n_cams, 4
@@ -164,14 +158,14 @@ class FalconPCDWrapper:
             device=device,
         )  # n_cams, H, W
         depth = depths[CAMERA_IDX]
-        
+
         pcd_tensor = create_pointcloud_from_depth_batch(
             intrinsic_matrix=intrinsic_matrix,
             depth=depth,
             keep_invalid=False,
             position=position,
             orientation=orientation,
-            device=device
+            device=device,
         )
 
         return pcd_tensor
